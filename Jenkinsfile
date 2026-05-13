@@ -3,7 +3,7 @@ pipeline {
 
     environment {
     
-        DOCKER_CREDS_ID = 'Docker-credentials'
+        DOCKER_CREDS_ID = 'Docker-info'
         
         IMAGE_NAME = 'pannu27/docker_image'
     }
@@ -24,7 +24,7 @@ pipeline {
   
    stage('Login to DockerHub') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'Docker-credentials', 
+        withCredentials([usernamePassword(credentialsId: 'Docker-info', 
                          passwordVariable: 'PASS', 
                          usernameVariable: 'USER')]) {
   
