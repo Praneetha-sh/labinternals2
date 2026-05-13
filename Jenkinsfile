@@ -5,7 +5,7 @@ pipeline {
     
         DOCKER_CREDS_ID = 'Docker-credentials'
         
-        IMAGE_NAME = 'pannu27/new_docker_image'
+        IMAGE_NAME = 'pannu27/docker_image'
     }
 
     stages {
