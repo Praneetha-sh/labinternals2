@@ -2,12 +2,13 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = 'Docker-credentials'
+    
+        DOCKER_CREDS_ID = 'Docker-credentials'
+        
         IMAGE_NAME = 'pannu27/new_docker_image'
     }
 
     stages {
-
         stage('Build Java Application') {
             steps {
                 bat 'javac Hello.java'
@@ -20,21 +21,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                bat 'docker build -t %IMAGE_NAME%:latest .'
-            }
-        }
-
+  
         stage('Login to DockerHub') {
             steps {
                 withCredentials([usernamePassword(
-                credentialsId: 'Docker-credentials',
-                usernameVariable: 'USER',
-                passwordVariable: 'PASS')]) {
-
+                    credentialsId: "${DOCKER_CREDS_ID}",
+                    usernameVariable: 'USER',
+                    passwordVariable: 'PASS')]) {
+      
                     bat 'echo %PASS% | docker login -u %USER% --password-stdin'
                 }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                
+                bat 'docker build -t %IMAGE_NAME%:latest .'
             }
         }
 
@@ -42,6 +45,13 @@ pipeline {
             steps {
                 bat 'docker push %IMAGE_NAME%:latest'
             }
+        }
+    }
+    
+    post {
+        always {
+            
+            bat 'docker logout'
         }
     }
 }
